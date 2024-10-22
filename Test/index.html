@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ask Gemini API & FM Control</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Ask Gemini API</h1>
+        <form onsubmit="sendQuestion(event)">
+            <input type="text" id="question" class="question-input" placeholder="Enter your question here" />
+            <button type="submit" class="submit-btn">Ask</button>
+        </form>
+        <p><button class="submit-btn fm-control-btn" onclick="location.href='/play'">Play FM</button></p>
+        <p><button class="submit-btn fm-control-btn" onclick="location.href='/pause'">Pause FM</button></p>
+        <p><button class="submit-btn fm-control-btn" onclick="location.href='/next'">Next Station</button></p>
+        <div id="response" class="response"></div>
+    </div>
+</body>
+<script>
+    function sendQuestion(event) {
+        event.preventDefault();
+        var question = document.getElementById('question').value;
+        if (question === '') {
+            alert('Please enter a question.');
+            return;
+        }
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/ask', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                document.getElementById('response').innerHTML = xhr.responseText;
+            }
+        };
+        xhr.send('question=' + encodeURIComponent(question));
+    }
+</script>
+</html>
